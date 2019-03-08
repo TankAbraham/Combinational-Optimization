@@ -129,13 +129,12 @@ def explode(node):
         temp[0].append(e)  # add an item into fixed
         temp[1].pop(i)  # remove an item from waiting
         temp[2] = LB2(temp[0], temp[1])  # Low Bound 2
-
         yield temp
 
 
 def brunch_bound():
     theHB, buffer, best = HB2(), list(), None
-    buffer.append(copy.deepcopy([[], [i for i in range(lenN)], 0]))  # [fixed, waiting, LB]
+    buffer.append(copy.deepcopy([[], [i for i in range(lenN)], 0]))  # [fix, wait, LB]
     while len(buffer):
         buffer = sorted(buffer, key=lambda e: e[2])  # 先按照LB进行排序,下面再按照展开的节点数进行排序
         buffer = sorted(buffer, key=lambda e: len(e[0]), reverse=True)  # 这样一样可以保证展开节点数多的、LB小的排在前面
@@ -148,7 +147,7 @@ def brunch_bound():
             if cur[2] > theHB[1]: continue
             if best is None: best = cur
             elif cur[2] <= best[2]: best = cur
-        else:  # node of intermedia
+        else:  # node of trunk
             for node in explode(cur):
                 if node[2] > theHB[1]: continue
                 buffer.append(node)
